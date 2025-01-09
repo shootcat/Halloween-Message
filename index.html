@@ -3,93 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halloween Überraschung</title>
+    <title>Frohes neues Jahr</title>
     <style>
-        /* Hintergrundbild und Styling */
         body {
-            background-image: url('https://wallpapers.com/images/hd/dark-halloween-pumpkin-faces-psvp5yk9634sp4r5.jpg');
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('https://cdn.pixabay.com/photo/2019/12/31/22/44/fireworks-4722679_960_720.jpg');
             background-size: cover;
             background-position: center;
-            color: #ff6e40;
-            font-family: 'Creepster', cursive;
             text-align: center;
-            padding: 50px;
-            margin: 0;
-        }
-        h1 {
-            color: #ff3333;
-            text-shadow: 2px 2px 5px #000;
-            animation: flicker 2s infinite alternate;
-        }
-        p {
-            font-size: 1.2em;
-        }
-        .button {
-            background-color: #f44336;
-            border: none;
             color: white;
-            padding: 15px 32px;
-            text-align: center;
-            font-size: 20px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: transform 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            overflow: hidden;
         }
-        .button:hover {
-            background-color: #c62828;
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
         }
-        .button:active {
-            transform: scale(0.95);
-        }
+        
         #message {
-            display: none;
             font-size: 1.5em;
-            color: #ffeb3b;
+            margin-bottom: 20px;
+        }
+
+        #blei-image {
+            max-width: 400px;
+            margin-bottom: 30px;
+        }
+
+        #button {
+            padding: 20px;
+            font-size: 1.5em;
+            background-color: #ff9900;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        #button:hover {
+            background-color: #ff6600;
+        }
+
+        #flame {
+            display: none;
+            width: 100px;
+            height: 100px;
+            background-image: url('https://media.giphy.com/media/Jy7Qs58XGn1Do/giphy.gif');
+            background-size: cover;
             margin-top: 20px;
-            animation: reveal 1s forwards;
         }
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                opacity: 1;
-            }
-            20%, 24%, 55% {
-                opacity: 0;
-            }
+
+        #new-image {
+            display: none;
         }
-        @keyframes reveal {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        
+        #result {
+            font-size: 1.2em;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-<h1>👻 Süßes oder Saures? 🎃</h1>
-<p>Wagst du es, dein Schicksal zu erfahren? Drücke den Button und finde es heraus ... falls du dich traust.</p>
+    <h1>Frohes neues Jahr!</h1>
+    <p id="message">Gieße dein Stückchen Blei und siehe, was dich dieses Jahr erwartet.</p>
+    
+    <img id="blei-image" src="https://github.com/shootcat/Halloween-Message/blob/b13b87ee33a1f32bad2fe68277ceb92ae39910/06-8051400_1-removebg-preview.png?raw=true" alt="Bleigießen Bild">
+    
+    <button id="button">Jetzt dein Blei gießen</button>
+    
+    <div id="flame"></div>
 
-<button class="button" onclick="trickOrTreat()" id="trickButton">Trick or Treat?</button>
+    <div id="new-image">
+        <img src="https://github.com/shootcat/Halloween-Message/blob/b13b87ee33a1f32bad2fe68277ceb92ae39910/sdfdsfsf-Photoroom.png?raw=true" alt="Neues Bild" style="max-width: 400px;">
+        <p id="result">(Du hast eine Form, die einer Grillwurst ähnelt. Laut unserer Datenbank bedeutet dies, dass du sehr bald die Chance haben wirst, eine Grillwurst zu essen.)</p>
+    </div>
 
-<div id="message"></div>
+    <script>
+        const button = document.getElementById('button');
+        const bleiImage = document.getElementById('blei-image');
+        const flame = document.getElementById('flame');
+        const newImage = document.getElementById('new-image');
+        const result = document.getElementById('result');
+        
+        button.addEventListener('click', () => {
+            // Blei-Bild ausblenden
+            bleiImage.style.display = 'none';
+            // Flamme anzeigen
+            flame.style.display = 'block';
 
-<script>
-    function trickOrTreat() {
-        // Zufallsgenerator für "Süßes" oder "Saures"
-        const messageElement = document.getElementById("message");
-        const buttonElement = document.getElementById("trickButton");
-        const isTreat = Math.random() < 0.5;
-
-        // Zeigt die entsprechende Nachricht an
-        if (isTreat) {
-            messageElement.innerHTML = "🍬 Süßes! Glückwunsch, du gehörst zu den Glücklichen. Heute gibt es Grillwürste um 10 Uhr!";
-        } else {
-            messageElement.innerHTML = "👻 Saures! Pech gehabt. Du wirst nie erfahren, ob es heute um 10 Uhr etwas zu essen gibt ... ";
-        }
-
-        // Nachricht sichtbar machen und Button ausblenden
-        messageElement.style.display = "block";
-        buttonElement.style.display = "none";
-    }
-</script>
+            // Nach 5 Sekunden Flamme ausblenden und das neue Bild anzeigen
+            setTimeout(() => {
+                flame.style.display = 'none';
+                newImage.style.display = 'block';
+            }, 5000);
+        });
+    </script>
 
 </body>
 </html>
