@@ -2,188 +2,154 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frohes neues Jahr</title>
+    <title>Secret Valentine</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-image: url('https://img.freepik.com/premium-vector/gradient-firework-background_23-2151748424.jpg');
+            padding: 0;
+            background-image: url('https://www.dbackdrop.com/cdn/shop/products/VAT40.jpg?v=1609314323');
             background-size: cover;
+            background-repeat: no-repeat;
             background-position: center;
+            width: 1440px;
+            height: 1000px;
+            overflow: hidden;
+            position: relative;
+        }
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        #container {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
             text-align: center;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        #loveBarContainer {
+            width: 80%;
+            background-color: #555;
+            margin: 20px auto;
+            border-radius: 5px;
             overflow: hidden;
         }
-
-        .content {
-            position: relative;
-            text-align: center;
+        #loveBar {
+            width: 0%;
+            height: 30px;
+            background-color: #ff69b4;
+            transition: width 3s;
         }
-
-        .transparent-background {
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 20px;
+        #loadingCircle {
+            display: none;
+            margin: 20px auto;
+        }
+        #result {
+            display: none;
+            margin-top: 30px;
+        }
+        #giftSection {
+            display: none;
+            margin-top: 20px;
+        }
+        #steakImage {
+            width: 300px;
+            margin: 20px auto;
             border-radius: 10px;
-            max-width: 80%;
-            margin: 0 auto;
-        }
-
-        h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
-        
-        #message {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-        }
-
-        #button {
-            padding: 20px;
-            font-size: 1.5em;
-            background-color: #ff9900;
-            border: none;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: background-color 0.3s;
-        }
-
-        #button:hover {
-            background-color: #ff6600;
-        }
-
-        #flame, #countdown, #new-image {
             display: none;
         }
-
-        #countdown {
-            font-size: 2em;
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            width: 250px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff69b4;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        button:hover {
+            background-color: #ff85c1;
+        }
+        h1, h2, h3, p {
+            margin: 10px;
+        }
+        #disclaimer {
+            font-size: 12px;
             margin-top: 20px;
-        }
-
-        /* Container für Text und Button */
-        .text-container {
-            position: relative;
-            margin-top: 50px;
-        }
-
-        /* Container für Bilder und Animation */
-        .image-container {
-            position: relative;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        #blei-image, #new-image img, #flame iframe {
-            max-width: 400px;
-            position: relative;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1; /* Sicherstellen, dass Bilder vor dem Text angezeigt werden */
-        }
-
-        /* Verschiebt Bild 2 nach links */
-        #new-image {
-            position: relative;
-            left: -100px; /* Bild 2 um 100px nach links verschieben */
-            display: none; /* Bild 2 ist standardmäßig unsichtbar */
-        }
-
-        /* Transparentes Hintergrund für den Text unter dem Bild */
-        .result-container {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            max-width: 80%;
-            margin: 0 auto;
-            font-size: 1.2em;
-            text-align: center;
-            display: none; /* Anfangs verborgen */
-            z-index: 0; /* Text unterhalb der Bilder */
-        }
-
-        /* Text unterteilt in mehrere Absätze */
-        .result-container p {
-            margin: 10px 0;
+            display: none;
         }
     </style>
+    <script>
+        var departments = ['Vertrieb', 'Konstruktion', 'Service', 'Einkauf', 'HR', 'Führungskreis', 'Fertigung', 'Montage'];
+        function startAnalysis() {
+            var name = document.getElementById('nameInput').value;
+            if(name.trim() === '') {
+                alert('Bitte gib deinen Namen ein!');
+                return;
+            }
+            document.getElementById('loveBar').style.width = '100%';
+            setTimeout(showDepartment, 3000);
+        }
+        function showDepartment() {
+            var randomDept = departments[Math.floor(Math.random() * departments.length)];
+            document.getElementById('department').innerText = randomDept;
+            document.getElementById('resultText').innerText = 'Wen aus der Abteilung wirst du wohl beschenken? Es ist eine Wahl! Abteilung:';
+            document.getElementById('result').style.display = 'block';
+            setTimeout(showGiftQuestion, 2000);
+        }
+        function showGiftQuestion() {
+            document.getElementById('giftQuestion').style.display = 'block';
+            setTimeout(showGiftLoading, 2000);
+        }
+        function showGiftLoading() {
+            document.getElementById('loadingCircle').style.display = 'block';
+            setTimeout(showGift, 2000);
+        }
+        function showGift() {
+            document.getElementById('loadingCircle').style.display = 'none';
+            document.getElementById('gift').innerText = 'Schweinesteak vom Bühlerhof!';
+            document.getElementById('giftSection').style.display = 'block';
+            document.getElementById('steakImage').style.display = 'block';
+            document.getElementById('disclaimer').style.display = 'block';
+        }
+    </script>
 </head>
 <body>
-
-    <div class="content">
-        <!-- Text-Container: Überschrift, Nachricht und Button -->
-        <div class="text-container">
-            <div class="transparent-background">
-                <h1>Frohes neues Jahr!</h1>
-                <p id="message">Gieße dein Stückchen Blei und siehe, was dich dieses Jahr erwartet.</p>
-                <button id="button">Jetzt dein Blei gießen</button>
+    <div id="overlay">
+        <div id="container">
+            <h1>Finde heraus, wer dein Secret Valentin wird und wen DU beschenken wirst! 💖</h1>
+            <input type="text" id="nameInput" placeholder="Gib deinen Namen ein">
+            <button onclick="startAnalysis()">Analysieren</button>
+            <div id="loveBarContainer">
+                <div id="loveBar"></div>
             </div>
-            <!-- Countdown und Resultat erscheinen unter dem Button -->
-            <div id="countdown"></div>
+            <div id="result">
+                <h2 id="resultText"></h2>
+                <h2><span id="department"></span></h2>
+            </div>
+            <div id="giftQuestion" style="display:none;">
+                <h2>Welches Geschenk soll es denn sein?</h2>
+            </div>
+            <img id="loadingCircle" src="https://i.gifer.com/ZKZg.gif" alt="Lädt...">
+            <div id="giftSection">
+                <h3><span id="gift"></span></h3>
+                <img id="steakImage" src="https://shop1.hgastro.de/wp-content/uploads/2020/05/Snacks_Herrmann_24.png" alt="Schweinesteak vom Bühlerhof">
+            </div>
+            <p id="disclaimer">Keine Gewähr dafür, dass dein/deine Valentin dich auch beschenkt.</p>
         </div>
     </div>
-
-    <!-- Container für Bild1 und Animation -->
-    <div class="image-container">
-        <img id="blei-image" src="https://github.com/shootcat/Halloween-Message/blob/main/06-8051400_1-removebg-preview.png?raw=true" alt="Bleigießen Bild">
-        
-        <!-- Giphy Feuer -->
-        <div id="flame">
-            <iframe src="https://giphy.com/embed/Yxpd00FNQTfFK" width="480" height="331" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-        </div>
-
-        <!-- Neues Bild (Grillwurst) -->
-        <div id="new-image">
-            <img src="https://github.com/shootcat/Halloween-Message/blob/main/sdfdsfsf-Photoroom.png?raw=true" alt="Neues Bild">
-        </div>
-        
-        <!-- Text unter dem Bild mit transparentem Hintergrund (zu Beginn unsichtbar) -->
-        <div class="result-container" id="result">
-            <p>Du hast eine Form, die einer Grillwurst ähnelt.</p>
-            <p>Laut unserer Datenbank bedeutet dies, dass du sehr bald die Chance haben wirst,</p>
-            <p>eine Grillwurst zu essen.</p>
-        </div>
-    </div>
-
-    <script>
-        const button = document.getElementById('button');
-        const bleiImage = document.getElementById('blei-image');
-        const flame = document.getElementById('flame');
-        const newImage = document.getElementById('new-image');
-        const countdownDisplay = document.getElementById('countdown');
-        const resultContainer = document.getElementById('result');
-        
-        button.addEventListener('click', () => {
-            // Blei-Bild ausblenden
-            bleiImage.style.display = 'none';
-            // Flamme anzeigen
-            flame.style.display = 'block';
-            countdownDisplay.style.display = 'block';
-
-            let countdown = 5;
-            countdownDisplay.textContent = `Schmelze Blei ${countdown} Sekunden...`;
-
-            const interval = setInterval(() => {
-                countdown--;
-                countdownDisplay.textContent = `Schmelze Blei ${countdown} Sekunden...`;
-                if (countdown <= 0) {
-                    clearInterval(interval);
-                    flame.style.display = 'none';
-                    newImage.style.display = 'block';
-                    countdownDisplay.style.display = 'none';
-                    resultContainer.style.display = 'block';  // Text wird jetzt angezeigt
-                }
-            }, 1000);
-        });
-    </script>
-
 </body>
 </html>
