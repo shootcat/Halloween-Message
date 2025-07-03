@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRKDL | Die Fleischsphäre</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero-Sektion -->
+    <section class="hero">
+        <video autoplay muted loop id="heroVideo">
+            <source src="assets/hero-video.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay">
+            <h1>FRKDL</h1>
+            <p>Nicht nur Fleisch. Eine Haltung.</p>
+            <div class="counter">
+                <span id="meatCounter">12.543</span>
+                <span>verzückte Fleischpuristen</span>
+            </div>
+            <div class="cta-buttons">
+                <button onclick="scrollToSection('philosophy')">Die Wissenschaft</button>
+                <button class="gold" onclick="scrollToSection('limited')">Limited Edition</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophie -->
+    <section id="philosophy" class="philosophy">
+        <div class="content">
+            <h2>Die Philosophie</h2>
+            <div class="science-grid">
+                <div class="science-card">
+                    <div class="chart" id="browningChart"></div>
+                    <h3>Optimaler Bräunungsgrad</h3>
+                </div>
+                <div class="science-card">
+                    <div class="chart" id="juicinessChart"></div>
+                    <h3>Saftigkeits-Matrix</h3>
+                </div>
+            </div>
+            <blockquote>
+                "Unsere Handwerks-Frikadelle vereint 7 Gewürzschichten in perfekter Matrix. 
+                Jede Kruste ein Unikat - weil Kompromisse nur beim Beilagensalat akzeptabel sind."
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- Limited Edition -->
+    <section id="limited" class="limited">
+        <h2>Limited Editions</h2>
+        <div class="edition-cards">
+            <div class="card sold-out">
+                <h3>Truffle-Infused</h3>
+                <p>Mit echten Alba-Trüffelspänen</p>
+                <span class="sold-out-label">SOLD OUT</span>
+            </div>
+            <div class="card sold-out">
+                <h3>Veganer Irrtum</h3>
+                <p>100% Rind - für Ironieliebhaber</p>
+                <span class="sold-out-label">SOLD OUT</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Konfigurator -->
+    <section class="configurator">
+        <h2>Frikadellen-Konfigurator</h2>
+        <div class="config-options">
+            <div class="option">
+                <label>Bräunungsgrad:</label>
+                <input type="range" min="1" max="5" value="3" id="browningSlider">
+                <span id="browningLabel">Goldbraun</span>
+            </div>
+            <div class="option">
+                <label>Beilagen-Pairing:</label>
+                <select id="sideSelect">
+                    <option>Klassische Bratkartoffeln</option>
+                    <option>Trüffel-Pommes</option>
+                    <option>Omas Kartoffelsalat</option>
+                </select>
+            </div>
+        </div>
+        <div class="result">
+            <div class="frikadelle-visual">
+                <div class="frikadelle" id="frikadelle"></div>
+                <div class="sides" id="sides"></div>
+            </div>
+            <button class="gold">Jetzt vorbestellen (unverbindlich)</button>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

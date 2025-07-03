@@ -1,0 +1,223 @@
+:root {
+    --meat-brown: #5D4037;
+    --grill-gray: #424242;
+    --mustard-yellow: #FFD600;
+    --gold: #D4AF37;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+    color: white;
+    background-color: #1a1a1a;
+}
+
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+/* Hero-Sektion */
+.hero {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#heroVideo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.hero-overlay {
+    text-align: center;
+    z-index: 1;
+    padding: 2rem;
+    background: rgba(0,0,0,0.5);
+    border-radius: 15px;
+    max-width: 800px;
+}
+
+.hero h1 {
+    font-size: 8rem;
+    letter-spacing: 0.5rem;
+    color: var(--mustard-yellow);
+    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+}
+
+.hero p {
+    font-size: 2rem;
+    margin: 1rem 0 2rem;
+    font-style: italic;
+}
+
+.counter {
+    font-size: 1.5rem;
+    margin: 2rem 0;
+}
+
+.counter span:first-child {
+    color: var(--gold);
+    font-weight: bold;
+    font-size: 2.2rem;
+}
+
+.cta-buttons button {
+    padding: 1rem 2rem;
+    margin: 0.5rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.cta-buttons .gold {
+    background: linear-gradient(135deg, var(--gold), #B8860B);
+    color: #333;
+    font-weight: bold;
+}
+
+/* Philosophie-Sektion */
+.philosophy {
+    padding: 8rem 2rem;
+    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                url('assets/philosophy-bg.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.science-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.science-card {
+    background: rgba(255,255,255,0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.chart {
+    height: 200px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+blockquote {
+    font-style: italic;
+    font-size: 1.5rem;
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 2rem;
+    border-left: 4px solid var(--mustard-yellow);
+    background: rgba(0,0,0,0.3);
+}
+
+/* Limited Edition */
+.limited {
+    padding: 8rem 2rem;
+    background: url('assets/limited-edition.jpg') center/cover;
+    text-align: center;
+}
+
+.edition-cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 3rem;
+    margin-top: 4rem;
+}
+
+.card {
+    background: rgba(255,255,255,0.9);
+    color: #333;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.sold-out-label {
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    background: var(--mustard-yellow);
+    color: #000;
+    padding: 0.5rem 3rem;
+    transform: rotate(45deg);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Konfigurator */
+.configurator {
+    padding: 8rem 2rem;
+    background: var(--grill-gray);
+    text-align: center;
+}
+
+.config-options {
+    max-width: 600px;
+    margin: 3rem auto;
+    background: rgba(0,0,0,0.2);
+    padding: 2rem;
+    border-radius: 15px;
+}
+
+.option {
+    margin: 2rem 0;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin-top: 1rem;
+    -webkit-appearance: none;
+    height: 10px;
+    background: #777;
+    border-radius: 5px;
+    background-image: linear-gradient(var(--mustard-yellow), var(--mustard-yellow));
+}
+
+.frikadelle-visual {
+    margin: 3rem auto;
+    width: 300px;
+    height: 300px;
+    position: relative;
+}
+
+#frikadelle {
+    width: 200px;
+    height: 200px;
+    background: var(--meat-brown);
+    border-radius: 100px;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transition: all 0.5s;
+}
+
+#sides {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+}
