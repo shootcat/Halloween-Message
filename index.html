@@ -1,98 +1,445 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRKDL | Die Fleischsphäre</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tagebuch eines Seriengrillers</title>
+<meta name="theme-color" content="#000000" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#050506;color:#e7e7e7;cursor:crosshair;overflow:hidden}
+  :root{ --mono:"Courier New","American Typewriter","Lucida Console",monospace; --comic:"Comic Sans MS","Comic Sans",system-ui,sans-serif }
+  body{font-family:var(--mono);letter-spacing:.02em}
+
+  .grain,.scan,.vignette,.blood,.grime{position:fixed;inset:-6%;pointer-events:none;z-index:0}
+  .grain{background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAC1+jfqAAAAH0lEQVR4nO3BMQEAAAgDINc/9C2hYQkAAAAAAAAAAAAAAAB4Gm5fAAGJmT3HAAAAAElFTkSuQmCC");background-size:160px 160px;opacity:.13;animation:grain 9s linear infinite;mix-blend-mode:soft-light}
+  @keyframes grain{0%{transform:translate(0,0)}100%{transform:translate(-160px,-160px)}}
+  .scan{background:linear-gradient(to bottom,rgba(255,255,255,.06),transparent 2px);background-size:100% 3px;opacity:.18;animation:scan 7s linear infinite;mix-blend-mode:overlay}
+  @keyframes scan{0%{background-position:0 -100%}100%{background-position:0 200%}}
+  .vignette{box-shadow:inset 0 0 260px 120px rgba(0,0,0,.9)}
+  .blood{
+    background:
+      radial-gradient(120px 60px at 12% 18%, rgba(160,0,12,.22), transparent 70%),
+      radial-gradient(220px 90px at 86% 30%, rgba(180,0,18,.16), transparent 70%),
+      radial-gradient(140px 60px at 70% 78%, rgba(160,0,12,.14), transparent 70%);
+    mix-blend-mode:multiply
+  }
+  .grime{
+    background:
+      repeating-linear-gradient(6deg, rgba(90,90,90,.06) 0 2px, transparent 2px 16px),
+      repeating-linear-gradient(-11deg, rgba(40,40,40,.05) 0 3px, transparent 3px 18px);
+    filter:contrast(105%) saturate(102%)
+  }
+
+  .intro{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;z-index:50}
+  .intro h1{font-family:var(--mono);font-size:clamp(28px,6vw,64px);letter-spacing:.04em;text-align:center;text-shadow:0 0 18px rgba(255,0,70,.35),0 0 8px rgba(255,255,255,.25);animation:pulse 1.8s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.94;transform:scale(1)}50%{opacity:1;transform:scale(1.01)}}
+  .type{font-size:clamp(14px,2.4vw,20px);color:#ddd;opacity:.95;min-height:2.2em}
+  .blink{display:inline-block;width:10px;height:1.1em;background:#ddd;animation:blink 1s steps(2) infinite;vertical-align:bottom;margin-left:6px}
+  @keyframes blink{50%{opacity:0}}
+  .intro-hint{font-size:12px;opacity:.7;font-family:var(--comic)}
+
+  .stage{position:relative;z-index:1;width:min(1180px,95vw);height:min(820px,94vh);margin:3vh auto 0;background:rgba(10,10,11,.74);border:1px solid rgba(255,255,255,.08);box-shadow:0 40px 140px rgba(0,0,0,.85),inset 0 0 0 1px rgba(255,255,255,.04);overflow:hidden}
+  .head{padding:18px 20px 10px;border-bottom:1px solid rgba(255,255,255,.08);text-align:center}
+  .title{font-size:clamp(24px,6vw,56px);text-shadow:0 0 16px rgba(255,0,80,.35),0 0 6px rgba(255,255,255,.22)}
+  .sub{opacity:.8;font-size:14px;margin-top:6px}
+
+  .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;padding:14px 16px 10px;height:calc(100% - 150px)}
+  .diary,.panel{border:1px solid rgba(255,255,255,.08);overflow:hidden;background:#0b0b0c}
+  .diary{position:relative;padding:18px;background:linear-gradient(transparent,rgba(255,0,50,.06) 120%),rgba(8,8,8,.82)}
+  .diary h2{font-size:18px;margin-bottom:6px;opacity:.9}
+  .ink{white-space:pre-wrap;line-height:1.38;font-size:16px;text-shadow:0 0 1px rgba(255,255,255,.06)}
+  .ink.fade{animation:fadeSwap .28s ease}
+  @keyframes fadeSwap{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+
+  /* Collage mit fünf eindeutigen Bildern und ohne Texte */
+  .panel{position:relative;background:#070708;display:grid;grid-template-rows:1fr 1fr;gap:8px;padding:8px}
+  .slot{position:relative;border:1px solid rgba(255,255,255,.08);overflow:hidden;background:#0a0a0b}
+  .slot::after{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(60% 120% at 10% 0%, rgba(150,0,10,.12), transparent 60%),
+      radial-gradient(60% 100% at 100% 70%, rgba(120,0,8,.08), transparent 60%);
+    mix-blend-mode:multiply;pointer-events:none
+  }
+  .imggrid{position:absolute;inset:0;display:grid;gap:6px;padding:6px;filter:contrast(112%) saturate(106%)}
+  .imggrid.top{grid-template-columns:2fr 1.2fr 1.2fr}
+  .imggrid.bottom{grid-template-columns:1fr 1fr}
+  .ph{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.06);min-height:0}
+  .ph .pic{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.75) contrast(1.18);animation:glitchPic 6s steps(20) infinite}
+  @keyframes glitchPic{
+    0%{transform:translate(0,0) scale(1)}
+    8%{transform:translate(-1px,0) scale(1.01)}
+    16%{transform:translate(1px,1px)}
+    36%{transform:translate(0,-1px)}
+    54%{transform:translate(-2px,0) scale(1.005)}
+    72%{transform:translate(1px,-1px)}
+    100%{transform:translate(0,0)}
+  }
+
+  .timeline{position:absolute;left:0;right:0;bottom:66px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 14px;z-index:5}
+  .navBtn{padding:8px 12px;border:1px solid rgba(255,255,255,.22);background:#141416;color:#fff;font-weight:700}
+  .navBtn[disabled]{opacity:.4;cursor:not-allowed}
+  .days{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:86%}
+  .dot{width:24px;height:24px;border-radius:999px;border:1px solid rgba(255,255,255,.22);display:inline-flex;align-items:center;justify-content:center;font-size:12px;background:#101113;opacity:.9;cursor:pointer;transition:transform .06s ease}
+  .dot:hover{transform:translateY(-1px)}
+  .dot.active{background:linear-gradient(90deg,rgba(255,0,60,.38),rgba(255,120,0,.28));box-shadow:0 0 14px rgba(255,0,60,.25)}
+
+  .bottom{position:absolute;left:0;right:0;bottom:0;height:66px;border-top:1px solid rgba(255,255,255,.08);background:rgba(6,6,6,.92);display:flex;align-items:center;justify-content:center;gap:14px;padding:8px 12px;z-index:5}
+  .ctaBtn{display:inline-block;padding:12px 16px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border:1px solid rgba(255,255,255,.22);background:radial-gradient(80% 140% at 50% 0,rgba(255,255,255,.08),rgba(255,0,60,.24));color:#fff;text-decoration:none;box-shadow:0 0 18px rgba(255,0,60,.28);transform:translateY(0);transition:transform .08s ease,box-shadow .18s ease}
+  .ctaBtn:hover{transform:translateY(-1px);box-shadow:0 6px 26px rgba(255,0,60,.38)}
+
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:40}
+  .modal.show{display:flex}
+  .sheet{width:min(540px,92vw);background:rgba(12,12,12,.92);border:1px solid rgba(255,255,255,.18);box-shadow:0 24px 120px rgba(0,0,0,.7),0 0 0 1px rgba(255,0,80,.2) inset;padding:18px 18px 16px;animation:pop .18s ease-out}
+  @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+  .sheet h3{font-size:clamp(18px,3vw,28px);text-align:center;margin-bottom:6px;text-shadow:0 0 10px rgba(255,0,80,.4)}
+  .sheet p{font-size:15px;text-align:center;opacity:.92}
+  .sheet .ok{margin:12px auto 4px;display:block;padding:10px 14px;border:1px solid rgba(255,255,255,.22);background:#141416;color:#fff;font-weight:700}
+
+  .flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:60}
+  .whisper{position:absolute;font-size:12px;opacity:.16;letter-spacing:.06em;user-select:none;pointer-events:none;z-index:2}
+</style>
 </head>
 <body>
-    <!-- Hero-Sektion -->
-    <section class="hero">
-        <video autoplay muted loop id="heroVideo">
-            <source src="assets/hero-video.mp4" type="video/mp4">
-        </video>
-        <div class="hero-overlay">
-            <h1>FRKDL</h1>
-            <p>Nicht nur Fleisch. Eine Haltung.</p>
-            <div class="counter">
-                <span id="meatCounter">12.543</span>
-                <span>verzückte Fleischpuristen</span>
-            </div>
-            <div class="cta-buttons">
-                <button onclick="scrollToSection('philosophy')">Die Wissenschaft</button>
-                <button class="gold" onclick="scrollToSection('limited')">Limited Edition</button>
-            </div>
-        </div>
-    </section>
+  <div class="grain"></div><div class="scan"></div><div class="vignette"></div><div class="grime"></div><div class="blood"></div>
+  <div class="flash" id="flash"></div>
 
-    <!-- Philosophie -->
-    <section id="philosophy" class="philosophy">
-        <div class="content">
-            <h2>Die Philosophie</h2>
-            <div class="science-grid">
-                <div class="science-card">
-                    <div class="chart" id="browningChart"></div>
-                    <h3>Optimaler Bräunungsgrad</h3>
-                </div>
-                <div class="science-card">
-                    <div class="chart" id="juicinessChart"></div>
-                    <h3>Saftigkeits-Matrix</h3>
-                </div>
-            </div>
-            <blockquote>
-                "Unsere Handwerks-Frikadelle vereint 7 Gewürzschichten in perfekter Matrix. 
-                Jede Kruste ein Unikat - weil Kompromisse nur beim Beilagensalat akzeptabel sind."
-            </blockquote>
-        </div>
-    </section>
+  <!-- Deine MP3, jetzt mit autoplay, loop, playsinline -->
+  <audio id="bgmp3" src="scary-laugh-377526.mp3" preload="auto" autoplay loop playsinline></audio>
 
-    <!-- Limited Edition -->
-    <section id="limited" class="limited">
-        <h2>Limited Editions</h2>
-        <div class="edition-cards">
-            <div class="card sold-out">
-                <h3>Truffle-Infused</h3>
-                <p>Mit echten Alba-Trüffelspänen</p>
-                <span class="sold-out-label">SOLD OUT</span>
-            </div>
-            <div class="card sold-out">
-                <h3>Veganer Irrtum</h3>
-                <p>100% Rind - für Ironieliebhaber</p>
-                <span class="sold-out-label">SOLD OUT</span>
-            </div>
-        </div>
-    </section>
+  <div class="intro" id="intro">
+    <h1>Ich sehe dich</h1>
+    <div class="type" id="type"></div><span class="blink"></span>
+    <div class="intro-hint">Ton ist aktiv. Tippe oder bewege die Maus, wenn du nichts hörst.</div>
+  </div>
 
-    <!-- Konfigurator -->
-    <section class="configurator">
-        <h2>Frikadellen-Konfigurator</h2>
-        <div class="config-options">
-            <div class="option">
-                <label>Bräunungsgrad:</label>
-                <input type="range" min="1" max="5" value="3" id="browningSlider">
-                <span id="browningLabel">Goldbraun</span>
-            </div>
-            <div class="option">
-                <label>Beilagen-Pairing:</label>
-                <select id="sideSelect">
-                    <option>Klassische Bratkartoffeln</option>
-                    <option>Trüffel-Pommes</option>
-                    <option>Omas Kartoffelsalat</option>
-                </select>
-            </div>
-        </div>
-        <div class="result">
-            <div class="frikadelle-visual">
-                <div class="frikadelle" id="frikadelle"></div>
-                <div class="sides" id="sides"></div>
-            </div>
-            <button class="gold">Jetzt vorbestellen (unverbindlich)</button>
-        </div>
-    </section>
+  <div class="stage" id="stage" aria-hidden="true">
+    <div class="head">
+      <div class="title">Tagebuch eines Seriengrillers</div>
+      <div class="sub" id="dateLine">Freitag</div>
+    </div>
 
-    <script src="script.js"></script>
+    <div class="wrap">
+      <section class="diary" aria-label="Tagebuch">
+        <h2 id="dayHeading">Tag 15</h2>
+        <div class="ink" id="ink"></div>
+      </section>
+
+      <!-- Collage ohne Beschriftung und ohne Wiederholung -->
+      <aside class="panel" aria-label="Collage">
+        <div class="slot">
+          <div class="imggrid top">
+            <div class="ph"><div class="pic" style="background-image:url('https://www.indiewire.com/wp-content/uploads/2015/07/sinister-2.jpg?w=600&h=337&crop=1')"></div></div>
+            <div class="ph"><div class="pic" style="background-image:url('https://i0.wp.com/www.horrorhomeroom.com/wp-content/uploads/2015/08/1.-Sinister-the-hanging.jpg')"></div></div>
+            <div class="ph"><div class="pic" style="background-image:url('https://www.cnet.com/a/img/resize/39e6ef6becd8f412fa86509fd80092b7118c916a/hub/2023/06/21/04aa0d60-3984-4980-8103-5fcc18f18c7e/evil-dead-rise.jpg?auto=webp&fit=crop&height=360&width=640')"></div></div>
+          </div>
+        </div>
+        <div class="slot">
+          <div class="imggrid bottom">
+            <div class="ph"><div class="pic" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg6nXmK0qG4Hq-dtwtVZxbrICKF2jNhIGs2w&s')"></div></div>
+            <div class="ph"><div class="pic" style="background-image:url('https://cdn.moviepilot.de/files/5428161f0183fe3dc61792438be88055c4fb3a0bac7f48908ba551e38daa/fill/1200/576/Michael-Myers-Halloween.jpg')"></div></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="timeline" aria-label="Navigation">
+      <button class="navBtn" id="prevBtn">Zurück</button>
+      <div class="days" id="days" aria-live="polite"></div>
+      <button class="navBtn" id="nextBtn">Weiter</button>
+    </div>
+
+    <div class="bottom">
+      <a href="#zeige" id="btnReveal" class="ctaBtn" aria-controls="modal" aria-expanded="false">Zeig es mir</a>
+    </div>
+  </div>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="sheet">
+      <h3 id="mTitle">Heute gibt es Grillwürste</h3>
+      <p id="mText">Heiß und frisch ab 10 Uhr im Aufenthaltsraum. Der Grill läuft mit Gas. Komm vorbei und hol dir den ersten Biss.</p>
+      <button class="ok" id="okBtn">Verstanden</button>
+    </div>
+  </div>
+
+<script>
+  (function setDate(){
+    const d=new Date();
+    const days=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+    const months=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+    document.getElementById('dateLine').textContent=`${days[d.getDay()]}, ${d.getDate()}. ${months[d.getMonth()]} ${d.getFullYear()}`
+  })();
+
+  const intro=document.getElementById('intro');
+  const typeEl=document.getElementById('type');
+  const introLines=["Es riecht nach Metall und Salz."];
+  let li=0,ci=0;
+  function typeNext(){
+    if(li>=introLines.length){ setTimeout(finishIntro,1200); return }
+    const line=introLines[li];
+    typeEl.textContent=line.slice(0,ci++);
+    if(ci<=line.length){ setTimeout(typeNext,28+Math.random()*30) }
+    else { li++; ci=0; setTimeout(()=>{ typeEl.textContent=""; finishIntro() },600) }
+  }
+  setTimeout(()=>{ try{ finishIntro() }catch(e){} },1800);
+
+  const diary=[
+`Tag 1
+Der Morgen riecht nach warmem Brot. Auf dem Markt hat jemand gepfiffen. Ich habe zurückgepfiffen und gelacht. Der neue Gasgrill wartet noch in der Verpackung. Ich stelle mir vor wie der Regler klickt. Eine kleine Flamme wie ein Sonnenaufgang. Am Abend schreibe ich eine Liste für Gäste. Alles wirkt einfach.`,
+`Tag 2
+Ich ziehe die Folie vom Metall. Der Knopf klickt leise. Nur ein kurzer Test. Die Flamme ist klein und brav. Ich schließe den Deckel. Die Küche klingt weich. Die Luft bleibt hell.`,
+`Tag 3
+Eine Kontrolle am gesperrten Durchgang. Nur Worte auf Papier. Ich nicke und gehe wieder. Zu Hause höre ich das Klicken des Reglers. Die Düse ist frei. Der Deckel legt sich sanft ab. Ordnung fühlt sich richtig an.`,
+`Tag 4
+Ich probiere Marinaden. Senf und Pfeffer. Ich notiere die Wendezeit. Ordnung ist ein freundliches Wort. Der Grill bleibt aus. Der Rost glänzt. Das Brot riecht nach Sonntag.`,
+`Tag 5
+Man bat mich zur Aussage. Ein Formular ohne Unterschrift. Ich lächle und warte. Die Neonlampe brummt. Die Uhr hat einen Schluckauf. Wieder daheim öffne ich das Gas minimal. Saubere Hitze. Ich bin unschuldig. Ich sage das und nicke.`,
+`Tag 6
+Es sei erledigt sagten sie. Keine Entschuldigung. Die Nacht ist dumpf. Ich streiche die Abdeckung glatt. Metall fühlt sich wie eine Haut an. Ich sage laut dass alles in Ordnung ist. Das Wort klingt hohl.`,
+`Tag 7
+Im Flur lachte jemand. Das Lachen blieb an mir kleben. Ich stelle den Grill auf Terrasse zwei. Der Boden ist gerader. Der Knopf klickt zweimal. Ich atme mit. Ich bin unschuldig. Ich sage das zweimal. Blaues Licht unter dem Rost wandert in meine Augen.`,
+`Tag 8
+Ein Raum ohne Fenster. In der Ecke steht der Grill. Die Flamme leuchtet ohne Hand. Ich wache auf. Es riecht nach Zwiebel. Ich habe nicht gekocht. Ich lache leise damit die Luft sich beruhigt. Die Luft bleibt unruhig.`,
+`Tag 9
+Jemand zählt in mir. Eins. Zwei. Zwei und ein halbes. Ich zünde nur kurz. Die Flamme zieht eine Linie. Die Linie gefällt mir. Ich lösche sie. Die Linie bleibt in mir.`,
+`Tag 10
+Im Spiegel übe ich freundlich. Es klappt doch das Lachen klingt falsch. Hinter der Tür steht nur eine Jacke. Ich drehe den Regler an und aus. Ich lege nichts auf. Ich sehe zu. Die Hitze sagt meinen Namen als hätte sie ihn lange gelernt.`,
+`Tag 11
+Im Aufenthaltsraum reden sie über Essen. Ich denke an Senf und Pfeffer und Brot das aufreißt. Ich denke an Flamme die nie hustet. Auf dem Heimweg spricht der Boden sehr leise. Ich verstehe nichts und nicke trotzdem.`,
+`Tag 12
+Meine Hände riechen nach Stahl und Gas. Ich male mit Gewürz auf Papier. Pfeffer sind Wege. Zwiebel sind Plätze. Senf ist Wasser. Die Karte führt im Kreis. Ich lache und höre wie etwas mitlacht. Es steht in meinem Hals.`,
+`Tag 13
+Ich rede mit dem Grill. Ich bitte ihn ruhig zu atmen. Er atmet gleichmäßig und zählt mit meiner Stimme. Ich lege die Stirn auf die Abdeckung. Kalt und freundlich. Als ich den Kopf hebe wird der Raum für einen Augenblick dunkel obwohl das Licht an bleibt.`,
+`Tag 14
+Die Stimmen kennen meinen Namen. Sie sagen ich habe nur auf richtiges Feuer gewartet. Ich antworte dass ich Ordnung will. Ich antworte dass niemand schuld ist. Die Luft riecht nach sauberem Gas und das beruhigt. Meine Worte klingen wie Schritte im Wasser.`,
+`Tag 15
+Heute liegt Gas wie Glas auf der Zunge. Der Raum hält den Atem an. Ich drehe nur einen Millimeter. Ein Lachen kriecht die Wand herab und setzt sich in meinen Nacken. Gestalten stehen dort wo niemand steht. Sie nicken und atmen in meinem Takt. Ich spreche mit ihnen und meine Stimme gehört mir nicht mehr. Pfeffer kratzt in der Luft. Rauch schreibt Zeichen an die Ränder. Ich schreibe alles auf damit das Feuer nicht vergisst. Die Flamme gehorcht. Das Lachen zählt. Ich zähle mit.`
+  ];
+
+  let ctx,master,niceGain,creepyGain,started=false,laughGainRef,mp3,mp3Connected=false;
+
+  function initAudio(){
+    if(started) return;
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    master=ctx.createGain(); master.gain.value=.06; master.connect(ctx.destination);
+
+    const nice=ctx.createGain(); nice.gain.value=.6;
+    const niceOsc=ctx.createOscillator(); niceOsc.type='sine'; niceOsc.frequency.value=420;
+    const niceOscGain=ctx.createGain(); niceOscGain.gain.value=.003; niceOsc.connect(niceOscGain).connect(nice);
+    const nb=ctx.createBuffer(1,2*ctx.sampleRate,ctx.sampleRate); const nd=nb.getChannelData(0);
+    for(let i=0;i<nd.length;i++){ nd[i]=(Math.random()*2-1)*((i%500)/500) }
+    const niceNoise=ctx.createBufferSource(); niceNoise.buffer=nb; niceNoise.loop=true;
+    const niceBP=ctx.createBiquadFilter(); niceBP.type='bandpass'; niceBP.frequency.value=2400; niceBP.Q.value=.9;
+    niceNoise.connect(niceBP).connect(nice);
+
+    const creepy=ctx.createGain(); creepy.gain.value=0.0;
+    const baseOsc=ctx.createOscillator(); baseOsc.type='triangle'; baseOsc.frequency.value=58;
+    const baseGain=ctx.createGain(); baseGain.gain.value=.03; baseOsc.connect(baseGain).connect(creepy);
+    const fmOsc=ctx.createOscillator(); fmOsc.type='sine'; fmOsc.frequency.value=4.2;
+    const fmGain=ctx.createGain(); fmGain.gain.value=22; fmOsc.connect(fmGain).connect(baseOsc.frequency);
+    const buffer=ctx.createBuffer(1,2*ctx.sampleRate,ctx.sampleRate); const data=buffer.getChannelData(0);
+    for(let i=0;i<data.length;i++){ data[i]=Math.random()*2-1 }
+    const noise=ctx.createBufferSource(); noise.buffer=buffer; noise.loop=true;
+    const band=ctx.createBiquadFilter(); band.type='bandpass'; band.frequency.value=1400; band.Q.value=1.2;
+    const laughGain=ctx.createGain(); laughGain.gain.value=0.0; noise.connect(band).connect(laughGain).connect(creepy); laughGainRef=laughGain;
+
+    // mp3 in den Graph hängen, aber nur einmal
+    mp3=document.getElementById('bgmp3');
+    if(!mp3Connected){
+      const mp3Src=ctx.createMediaElementSource(mp3);
+      const mp3Gain=ctx.createGain(); mp3Gain.gain.value=.55;
+      mp3Src.connect(mp3Gain).connect(creepy);
+      mp3Connected=true;
+    }
+
+    const breathOsc=ctx.createOscillator(); breathOsc.type='sine'; breathOsc.frequency.value=.12;
+    const breathGain=ctx.createGain(); breathGain.gain.value=.02; breathOsc.connect(breathGain).connect(nice.gain);
+
+    nice.connect(master); creepy.connect(master);
+    niceNoise.start(); niceOsc.start(); breathOsc.start();
+    baseOsc.start(); fmOsc.start(); noise.start();
+
+    function burst(){
+      const now=ctx.currentTime;
+      laughGain.gain.cancelScheduledValues(now);
+      laughGain.gain.setValueAtTime(0.0,now);
+      laughGain.gain.linearRampToValueAtTime(0.6+Math.random()*0.3,now+.02);
+      laughGain.gain.exponentialRampToValueAtTime(.001,now+.16+Math.random()*.08);
+      baseOsc.frequency.cancelScheduledValues(now);
+      const base=56+Math.random()*6; baseOsc.frequency.setValueAtTime(base,now);
+      baseOsc.frequency.linearRampToValueAtTime(base+4,now+.2);
+      flash();
+    }
+    function phrase(){
+      const chuckles=2+Math.floor(Math.random()*4); let t=0;
+      for(let i=0;i<chuckles;i++){ setTimeout(burst,t); t+=140+Math.random()*120 }
+      setTimeout(phrase,1200+Math.random()*1800);
+    }
+    phrase();
+
+    niceGain=nice; creepyGain=creepy; started=true;
+  }
+
+  function setMood(index){
+    const t=index/14;
+    if(!niceGain||!creepyGain) return;
+    const a=Math.pow(1-t,1.2);
+    const b=Math.pow(t,.9);
+    niceGain.gain.setTargetAtTime(a,ctx.currentTime,.25);
+    creepyGain.gain.setTargetAtTime(b,ctx.currentTime,.25);
+    if(laughGainRef){
+      const l=.05+b*.25;
+      laughGainRef.gain.setTargetAtTime(l,ctx.currentTime,.25);
+    }
+  }
+
+  const flashEl=document.getElementById('flash');
+  function flash(ms){
+    flashEl.style.opacity=Math.random()*0.16+0.12;
+    setTimeout(()=>{ flashEl.style.opacity=0 }, ms?ms*1000:80+Math.random()*120);
+  }
+  const stage=document.getElementById('stage');
+  function addWhisper(){
+    const w=document.createElement('div');
+    w.className='whisper';
+    const words=["knistern","glut","gas","biss","heiß","pfeffer","zwiebel","siede","rauch","zisch"];
+    w.textContent=words[Math.floor(Math.random()*words.length)];
+    w.style.left=Math.floor(Math.random()*90+3)+"%";
+    w.style.top=Math.floor(Math.random()*80+10)+"%";
+    stage.appendChild(w);
+    setTimeout(()=>w.remove(),4800+Math.random()*4200);
+  }
+  setInterval(addWhisper,1200);
+
+  document.addEventListener('mousemove',e=>{
+    const r=stage.getBoundingClientRect();
+    const nx=(e.clientX-r.left)/r.width-.5;
+    const ny=(e.clientY-r.top)/r.height-.5;
+    stage.style.transform=`translateY(${ny*2}px) translateX(${nx*2}px)`;
+    if(Math.random()<.05) flash();
+  });
+
+  function finishIntro(){
+    intro.style.display="none";
+    document.getElementById('stage').removeAttribute('aria-hidden');
+    ensureMp3();
+  }
+
+  function ensureMp3(){
+    const a=document.getElementById('bgmp3');
+    try{ a.volume=0.9; a.play().catch(()=>{}) }catch(e){}
+  }
+
+  function tryStartAudio(){
+    try{
+      initAudio();
+      if(ctx&&ctx.state==="suspended"){ ctx.resume() }
+      ensureMp3();
+    }catch(e){}
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    const a=document.getElementById('bgmp3');
+    a.volume=0.9;
+    typeNext();
+    tryStartAudio();
+    setTimeout(tryStartAudio,300);
+    buildTimeline();
+    goToDay(14,true);
+  });
+
+  ['click','keydown','pointerdown','touchstart','mousemove','visibilitychange'].forEach(ev=>{
+    window.addEventListener(ev,()=>{
+      try{
+        if(!started) initAudio();
+        if(ctx&&ctx.state==="suspended") ctx.resume();
+        ensureMp3();
+      }catch(e){}
+    },{once:false,passive:true});
+  });
+
+  const ink=document.getElementById('ink');
+  const dayHeading=document.getElementById('dayHeading');
+  const prevBtn=document.getElementById('prevBtn');
+  const nextBtn=document.getElementById('nextBtn');
+  const daysWrap=document.getElementById('days');
+  let currentIndex=14;
+
+  function buildTimeline(){
+    daysWrap.innerHTML="";
+    for(let i=0;i<15;i++){
+      const d=document.createElement('button');
+      d.type='button';
+      d.className='dot';
+      d.textContent=i+1;
+      d.setAttribute('aria-label',`Tag ${i+1}`);
+      d.addEventListener('click',()=>goToDay(i));
+      daysWrap.appendChild(d);
+    }
+    updateDots();
+  }
+
+  function updateDots(){
+    [...daysWrap.children].forEach((c,i)=>{ if(i===currentIndex) c.classList.add('active'); else c.classList.remove('active') });
+    prevBtn.disabled=currentIndex===0;
+    nextBtn.disabled=currentIndex===14;
+  }
+
+  prevBtn.addEventListener('click',()=>goToDay(currentIndex-1));
+  nextBtn.addEventListener('click',()=>goToDay(currentIndex+1));
+  window.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft') goToDay(currentIndex-1);
+    if(e.key==='ArrowRight') goToDay(currentIndex+1);
+  });
+
+  function goToDay(index,instant){
+    currentIndex=Math.max(0,Math.min(14,index));
+    const text=diary[currentIndex];
+    dayHeading.textContent=`Tag ${currentIndex+1}`;
+    if(!instant){ flash(); ink.classList.remove('fade'); void ink.offsetWidth; ink.classList.add('fade') }
+    ink.textContent=text;
+    colorMood(currentIndex);
+    updateDots();
+    if(started) setMood(currentIndex);
+    setPanelVibe(currentIndex);
+  }
+
+  function colorMood(i){
+    const t=i/14;
+    const red=Math.floor(12+t*70);
+    const g=Math.floor(12+t*14);
+    const b=Math.floor(14+t*16);
+    document.querySelector('.diary').style.background=`linear-gradient(transparent, rgba(255,0,50,${0.04+t*0.08}) 120%), rgba(${red},${g},${b}, .82)`;
+  }
+
+  function setPanelVibe(i){
+    const pics=document.querySelectorAll('.pic');
+    const t=i/14;
+    pics.forEach((p,k)=>{
+      const br=.65+t*.12+Math.sin((i+k)*0.7)*0.03;
+      const ct=1.12+t*.22;
+      p.style.filter=`brightness(${br}) contrast(${ct})`;
+    });
+  }
+
+  const btn=document.getElementById('btnReveal');
+  const modal=document.getElementById('modal');
+  const okBtn=document.getElementById('okBtn');
+  btn.addEventListener('click',e=>{
+    e.preventDefault();
+    flash();
+    modal.classList.add('show');
+    btn.setAttribute('aria-expanded','true');
+    ink.textContent+=`
+
+Jemand hat Ja gesagt. Der Rost lächelt.`;
+  });
+  okBtn.addEventListener('click',()=>{
+    modal.classList.remove('show');
+    btn.setAttribute('aria-expanded','false');
+  });
+</script>
 </body>
 </html>
+
